@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Perfume } from "@/types/perfume";
 import TextField from "@mui/material/TextField";
@@ -37,14 +39,18 @@ export default function VitrineClient({ perfumes }: { perfumes: Perfume[] }) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {perfumesFiltrados.map((perfume) => (
+            <Link href={`/produto/${perfume.id}`} key={perfume.id}>
           <div
-            key={perfume.id}
             className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl transition-shadow duration-300 relative"
           >
             <IconButton
-              onClick={() => alternarFavorito(perfume.id)}
+                onClick={(e) => {
+                  e.preventDefault(); 
+                  e.stopPropagation();
+                  alternarFavorito(perfume.id);
+                }}
               className="!absolute top-2 right-2"
-            >
+            > 
               {favoritos.includes(perfume.id) ? (
                 <FavoriteIcon className="text-pink-600" />
               ) : (
@@ -52,9 +58,11 @@ export default function VitrineClient({ perfumes }: { perfumes: Perfume[] }) {
               )}
             </IconButton>
 
-            <img
+            <Image
               src={perfume.thumbnail}
               alt={perfume.title}
+              width={300}
+              height={160}
               className="w-full h-40 object-cover rounded-lg mb-3"
             />
             <h2 className="text-lg font-semibold text-gray-800">{perfume.title}</h2>
@@ -65,7 +73,8 @@ export default function VitrineClient({ perfumes }: { perfumes: Perfume[] }) {
               </span>
               <span className="text-sm text-yellow-500">⭐ {perfume.rating}</span>
             </div>
-          </div>
+            </div>
+            </Link>
         ))}
       </div>
     </div>
